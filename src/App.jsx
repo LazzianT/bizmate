@@ -3,6 +3,11 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Send, CheckCircle, ArrowRight, Sparkles, BarChart3, Users, Shield, Menu, X, Star, ChevronRight, Zap, TrendingUp, Clock, MessageCircle, MapPin, ChevronDown } from 'lucide-react';
 import bizmateLogo from './assets/bizmateLogo.png';
 import SimulasiPage from './SimulasiPage.jsx';
+import HowItWorks from './HowItWorks.jsx';
+import Pricing from './Pricing.jsx';
+import CaseStudies from './CaseStudies.jsx';
+import FAQ from './FAQ.jsx';
+
 
 function scrollTo(id) {
   const el = document.getElementById(id);
@@ -84,7 +89,7 @@ function useParallax(value, distance) {
 function FloatingShape({ className, delay = 0 }) {
   return (
     <motion.div
-      className={`absolute rounded-full opacity-20 blur-xl ${className}`}
+      className={`absolute rounded-full opacity-20 blur-xl pointer-events-none ${className}`}
       animate={{
         y: [0, -30, 0],
         x: [0, 15, 0],
@@ -164,10 +169,13 @@ function Navbar({ onSimulasi }) {
       </motion.div>
 
       <div className="hidden md:flex items-center gap-8">
-        {["Fitur", "Testimoni"].map((item) => (
+        {["Fitur", "Portofolio", "Harga", "Testimoni"].map((item) => (
           <motion.button
             key={item}
-            onClick={() => scrollTo(item.toLowerCase())}
+            onClick={() => {
+              const id = item === 'Harga' ? 'harga' : item === 'Portofolio' ? 'portofolio' : item.toLowerCase();
+              scrollTo(id);
+            }}
             className="text-slate-600 hover:text-slate-900 font-medium relative cursor-pointer"
             whileHover={{ y: -2 }}
           >
@@ -175,11 +183,11 @@ function Navbar({ onSimulasi }) {
           </motion.button>
         ))}
         <motion.button
-          onClick={() => scrollTo("order")}
+          onClick={() => scrollTo("faq")}
           className="text-slate-600 hover:text-slate-900 font-medium relative cursor-pointer"
           whileHover={{ y: -2 }}
         >
-          Kontak
+          FAQ
         </motion.button>
         <motion.button
           onClick={onSimulasi}
@@ -203,12 +211,12 @@ function Navbar({ onSimulasi }) {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-full left-4 right-4 bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-100 p-6 md:hidden flex flex-col gap-4"
           >
-            {["Fitur", "Testimoni"].map((item) => (
-              <button key={item} onClick={() => { scrollTo(item.toLowerCase()); setOpen(false); }} className="text-slate-700 font-medium py-2 text-left cursor-pointer">
+            {["Fitur", "Portofolio", "Harga", "Testimoni"].map((item) => (
+              <button key={item} onClick={() => { const id = item === 'Harga' ? 'harga' : item === 'Portofolio' ? 'portofolio' : item.toLowerCase(); scrollTo(id); setOpen(false); }} className="text-slate-700 font-medium py-2 text-left cursor-pointer">
                 {item}
               </button>
             ))}
-            <button onClick={() => { scrollTo("order"); setOpen(false); }} className="text-slate-700 font-medium py-2 text-left cursor-pointer">Kontak</button>
+            <button onClick={() => { scrollTo("faq"); setOpen(false); }} className="text-slate-700 font-medium py-2 text-left cursor-pointer">FAQ</button>
             <button onClick={() => { onSimulasi(); setOpen(false); }} className="px-5 py-3 bg-blue-600 text-white rounded-xl text-center font-medium cursor-pointer">Mulai Sekarang</button>
           </motion.div>
         )}
@@ -676,9 +684,13 @@ export default function BizmateLanding() {
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-600 selection:text-white overflow-x-hidden">
       <Navbar onSimulasi={() => setPage('simulasi')} />
       <Hero onSimulasi={() => setPage('simulasi')} />
+      <HowItWorks />
       <Features />
       <Stats />
+      <Pricing />
+      <CaseStudies />
       <Testimonials />
+      <FAQ />
       <OrderSection />
       <Footer />
     </div>
