@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle, ArrowRight, Sparkles, BarChart3, Users, Shield, Menu, X, Star, ChevronRight, Zap, TrendingUp, Clock, MessageCircle, MapPin, ChevronDown } from 'lucide-react';
+import bizmateLogo from './assets/bizmateLogo.png';
+import SimulasiPage from './SimulasiPage.jsx';
 
 function scrollTo(id) {
   const el = document.getElementById(id);
@@ -140,7 +142,7 @@ const staggerContainer = {
   },
 };
 
-function Navbar() {
+function Navbar({ onSimulasi }) {
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
   const bg = useTransform(scrollY, [0, 80], ["rgba(255,255,255,0)", "rgba(255,255,255,0.8)"]);
@@ -151,13 +153,13 @@ function Navbar() {
       className="fixed top-0 inset-x-0 z-50 px-6 md:px-10 py-4 flex justify-between items-center"
     >
       <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-2.5">
-        <motion.div
-          whileHover={{ rotate: 360 }}
-          transition={{ duration: 0.6 }}
-          className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-600/30"
-        >
-          b
-        </motion.div>
+        <motion.img
+          src={bizmateLogo}
+          alt="Bizmate"
+          className="h-9 md:h-10 w-auto drop-shadow-lg"
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          transition={{ duration: 0.3 }}
+        />
         <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">bizmate</span>
       </motion.div>
 
@@ -180,7 +182,7 @@ function Navbar() {
           Kontak
         </motion.button>
         <motion.button
-          onClick={() => scrollTo("order")}
+          onClick={onSimulasi}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full font-medium shadow-lg shadow-blue-600/25 transition-shadow cursor-pointer"
@@ -207,7 +209,7 @@ function Navbar() {
               </button>
             ))}
             <button onClick={() => { scrollTo("order"); setOpen(false); }} className="text-slate-700 font-medium py-2 text-left cursor-pointer">Kontak</button>
-            <button onClick={() => { scrollTo("order"); setOpen(false); }} className="px-5 py-3 bg-blue-600 text-white rounded-xl text-center font-medium cursor-pointer">Mulai Sekarang</button>
+            <button onClick={() => { onSimulasi(); setOpen(false); }} className="px-5 py-3 bg-blue-600 text-white rounded-xl text-center font-medium cursor-pointer">Mulai Sekarang</button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -215,7 +217,7 @@ function Navbar() {
   );
 }
 
-function Hero() {
+function Hero({ onSimulasi }) {
   const { scrollYProgress } = useScroll();
   const y = useParallax(scrollYProgress, 80);
   const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.95]);
@@ -266,7 +268,7 @@ function Hero() {
         className="flex flex-col sm:flex-row gap-4 mt-10"
       >
         <motion.button
-          onClick={() => scrollTo("order")}
+          onClick={onSimulasi}
           whileHover={{ scale: 1.05, boxShadow: "0 20px 60px rgba(37,99,235,0.4)" }}
           whileTap={{ scale: 0.95 }}
           className="px-8 py-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl font-semibold text-lg inline-flex items-center gap-2 group cursor-pointer"
@@ -640,7 +642,7 @@ function Footer() {
     <footer className="relative py-12 px-6 bg-slate-950 border-t border-slate-800">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-400 rounded-lg flex items-center justify-center text-white font-bold">b</div>
+          <img src={bizmateLogo} alt="Bizmate" className="h-8 w-auto brightness-0 invert" />
           <span className="text-lg font-bold text-white">bizmate</span>
         </motion.div>
         <p className="text-slate-500 text-sm text-center">
@@ -664,10 +666,16 @@ function Footer() {
 }
 
 export default function BizmateLanding() {
+  const [page, setPage] = useState('home');
+
+  if (page === 'simulasi') {
+    return <SimulasiPage onBack={() => setPage('home')} />;
+  }
+
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-600 selection:text-white overflow-x-hidden">
-      <Navbar />
-      <Hero />
+      <Navbar onSimulasi={() => setPage('simulasi')} />
+      <Hero onSimulasi={() => setPage('simulasi')} />
       <Features />
       <Stats />
       <Testimonials />
